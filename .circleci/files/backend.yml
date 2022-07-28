@@ -28,8 +28,8 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: newkeyk
-      ImageId: ami-08d4ac5b634553e161
+      KeyName: newkeyks
+      ImageId: ami-08d4ac5b634553e161sd
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
