@@ -2,10 +2,29 @@ version: 2.1
 orbs: 
   slack: circleci/slack@4.10.1
 commands:
+  dependencies:
+    steps:
+      - run:
+          name: Installing necessary packages
+          command: |
+            sudo apt update
+            sudo apt install -y tar gzip curl software-properties-common
+      - run:
+          name: Installing aws-cli
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Installing ansible
+          command: |
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      # Add parameter here   
+      workflow_id:
+        type: string   
     steps:
       - run:
           name: Destroy environments
@@ -240,15 +259,7 @@ jobs:
       - restore_cache:
           keys:
             - build-frontend     
-      - run:
-          name: Install dependencies
-          command: |
-            npm install
-            sudo apk add curl
-            sudo apk add --upgrade bash
-            sudo apk add --update ansible
-            sudo apk add openssh-client
-            pip3 install awscli
+      - dependencies
       - run:
           name: Get backend url
           command: |
