@@ -1,2 +1,2 @@
 https://github.com/cleronga/Auto-Deploy-Superpowers.git
-http://udapeople-7f61c7d.s3-website-us-east-1.amazonaws.com
+http://udapeople-490317c.s3-website-us-east-1.amazonaws.com/
