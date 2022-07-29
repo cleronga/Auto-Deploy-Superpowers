@@ -239,11 +239,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-             apk add --update ansible
-             apk add --update nodejs 
-             apk add --update npm
-             apk add --update tar gzip
-             pip3 install awscli
+            apk add curl
+            apk add --upgrade bash
+            apk add --update ansible
+            apk add openssh-client
+            pip3 install awscli
       - run:
           name: Get backend url
           command: |
