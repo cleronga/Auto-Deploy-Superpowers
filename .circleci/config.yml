@@ -42,7 +42,7 @@ commands:
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
+          when: on_fail
           command: |           
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS=$(curl "https://kvdb.io/9GE4jRtKznmVKRfvdBABBe//migration_<<parameters.workflow_id>>" -H "X-Api-Key: ${THISDB_API_KEY}")
@@ -371,6 +371,10 @@ jobs:
              return 1
              fi
       # Here's where you will add some code to rollback on failure 
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
               
 
 workflows:
