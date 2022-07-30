@@ -350,15 +350,13 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |  
-            BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-             API_URL="http://${BACKEND_IP}:3030"          
-            #export API_URL="http://${BACKEND_IP}:3030"
+            export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok"
             then
-            return 0
+             return 0
             else
-            return 1
+             return 1
             fi
       - run:
           name: Frontend smoke test.
@@ -393,17 +391,17 @@ workflows:
           filters:
             branches:
              only: [circleci-project-setup]
-      #- configure-infrastructure:
-       #   requires: [deploy-infrastructure]
-      #- run-migrations:
-         # requires: [configure-infrastructure]
-     # - deploy-frontend:
-       #   requires: [run-migrations]
-      #- deploy-backend:
-      #    requires: [run-migrations]
-      - smoke-test:
+      - configure-infrastructure:
           requires: [deploy-infrastructure]
-         # requires: [deploy-backend, deploy-frontend]
+      - run-migrations:
+         requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+         # requires: [deploy-infrastructure]
+          requires: [deploy-backend, deploy-frontend]
       #- cloudfront-update:
       #    requires: [smoke-test]
       #- cleanup:
