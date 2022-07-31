@@ -1,17 +1,40 @@
-- name: load environment variables
-  become_method: sudo
-  become_user: root
-  become: yes
-  shell: |
-    ls -al
-    echo "NODE_ENV=production" >> .env
-    echo "ENVIRONMENT=production" >> .env
-    echo "TYPEORM_CONNECTION={{ lookup('env', 'TYPEORM_CONNECTION')}}" >> .env
-    echo "TYPEORM_ENTITIES={{ lookup('env', 'TYPEORM_ENTITIES')}}" >> .env
-    echo "TYPEORM_HOST={{ lookup('env', 'TYPEORM_HOST')}}" >> .env
-    echo "TYPEORM_PORT={{ lookup('env', 'TYPEORM_PORT')}}" >> .env
-    echo "TYPEORM_USERNAME={{ lookup('env', 'TYPEORM_USERNAME')}}" >> .env
-    echo "TYPEORM_PASSWORD={{ lookup('env', 'TYPEORM_PASSWORD')}}" >> .env
-    echo "TYPEORM_DATABASE={{ lookup('env', 'TYPEORM_DATABASE')}}" >> .env
-    echo "TYPEORM_MIGRATIONS={{ lookup('env', 'TYPEORM_MIGRATIONS')}}" >> .env
-    echo "TYPEORM_MIGRATIONS_DIR={{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}" >> .env
+---
+  - name: Copy files
+    become: true
+    copy:
+      src: /root/project/artifact.tar.gz
+      dest: /home/ubuntu/artifact.tar.gz
+  - name: Unarchive
+    become: true
+    shell : |
+        cd /home/ubuntu/
+        tar xvzf artifact.tar.gz -C .
+  - name: "run server"
+    become: true
+    shell : |
+        cd /home/ubuntu/
+        npm install
+        pm2 stop default
+        pm2 start npm -- start
+        echo "NODE_ENV=production" >> .env
+        echo "ENVIRONMENT=production" >> .env
+        echo "TYPEORM_CONNECTION={{ lookup('env', 'TYPEORM_CONNECTION')}}" >> .env
+        echo "TYPEORM_ENTITIES={{ lookup('env', 'TYPEORM_ENTITIES')}}" >> .env
+        echo "TYPEORM_HOST={{ lookup('env', 'TYPEORM_HOST')}}" >> .env
+        echo "TYPEORM_PORT={{ lookup('env', 'TYPEORM_PORT')}}" >> .env
+        echo "TYPEORM_USERNAME={{ lookup('env', 'TYPEORM_USERNAME')}}" >> .env
+        echo "TYPEORM_PASSWORD={{ lookup('env', 'TYPEORM_PASSWORD')}}" >> .env
+        echo "TYPEORM_DATABASE={{ lookup('env', 'TYPEORM_DATABASE')}}" >> .env
+        echo "TYPEORM_MIGRATIONS={{ lookup('env', 'TYPEORM_MIGRATIONS')}}" >> .env
+        echo "TYPEORM_MIGRATIONS_DIR={{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}" >> .env
+    environment:
+      ENVIRONMENT: production
+      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
+      TYPEORM_MIGRATIONS_DIR: "./migrations"
+      TYPEORM_MIGRATIONS: "./migrations/*.js"
+      TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
+      TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
+      TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
+      TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
+      TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+      TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
