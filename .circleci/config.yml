@@ -202,7 +202,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ["88:25:74:27:46:2e:35:2e:1f:ba:3c:06:54:28:20:3d"]
+          fingerprints: ["88:25:74:27:46:2e:35:2e:1f:ba:3c:06:54:28:20:3d"]         
       # attach workspace
       - attach_workspace:
           at: ~/
@@ -267,7 +267,7 @@ jobs:
           name: Get backend url
           command: |
            BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-             API_URL="http://${BACKEND_IP}:3030" 
+            API_URL="http://${BACKEND_IP}:3030" 
             #export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
