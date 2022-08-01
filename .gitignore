@@ -8,7 +8,7 @@ log.txt
 *.sublime-workspace
 .vscode/
 npm-debug.log*
-
+.gitgnore
 .idea/
 .ionic/
 .sourcemaps/
@@ -27,7 +27,7 @@ plugins/ios.json
 $RECYCLE.BIN/
 postgres_dev/
 logfile
-
+Auto-Deploy-Superpowers/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
